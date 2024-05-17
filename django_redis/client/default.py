@@ -4,6 +4,7 @@ import socket
 from collections import OrderedDict
 from contextlib import suppress
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple, Union
+import numbers
 
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT, BaseCache, get_key_func
@@ -164,6 +165,8 @@ class DefaultClient:
         nvalue = self.encode(value)
 
         if timeout is DEFAULT_TIMEOUT:
+            timeout = self._backend.default_timeout
+        elif not isinstance(DEFAULT_TIMEOUT, numbers.Number):
             timeout = self._backend.default_timeout
 
         original_client = client
